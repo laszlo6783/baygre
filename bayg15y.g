@@ -18,8 +18,8 @@ transf={3 3 3};
 IM0=zeros(s*ns,s*csn);	/*	Az aktualis choice-set-ek IM-je	*/
 IMTot=zeros(s*ns,s);		/*	Az elozo designok osszesitett IM-je	*/
 IMTotA=zeros(s*ns,s);		/*	Az aktualis osszesitett IM	*/
-/*IMTemp=zeros(s*ns,s);			A temporalis osszesitett IM	*/
-/*IM0Temp=zeros(s*ns,s);		A temporalis choice-set IM-je	*/
+IMTemp=zeros(s*ns,s);		/*	A temporalis osszesitett IM	*/
+IM0Temp=zeros(s*ns,s);	/*	A temporalis choice-set IM-je	*/
 transf={3 3 3};
 
 for i (1,ns,1);
@@ -37,18 +37,19 @@ endfor;
 
 IMT00=IMTot;	/*legelso, ha UGYANAZT a designt hasznaljuk mindig, s nem keverjuk meg, akkor hasznalhato */
 
-IMTot=zeros(s*ns,s);
 nd= 2 ;											@ number of designs @
 dd={};
 ii=1;
 do while ii<=nd;									@ start of loop @
 t0=hsec/100;
-xx=X0;										@ generates a random relabeling of x0 @
-IMTot=IMTot+IMT00;
+xx=X0;											@ generates a random relabeling of x0 @
 min=fcnN(IMTot);
 format /rd 6,3;
 min;
 
+if ii==1;
+IMTot=zeros(s*ns,s);
+endif;
 /*  SWAPPING  */
 
 m= cols(xx)-1 ;
