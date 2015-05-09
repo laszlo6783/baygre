@@ -18,8 +18,8 @@ transf={3 3 3};
 IM0=zeros(s*ns,s*csn);	/*	Az aktualis choice-set-ek IM-je	*/
 IMTot=zeros(s*ns,s);		/*	Az elozo designok osszesitett IM-je	*/
 IMTotA=zeros(s*ns,s);		/*	Az aktualis osszesitett IM	*/
-IMTemp=zeros(s*ns,s);		/*	A temporalis osszesitett IM	*/
-IM0Temp=zeros(s*ns,s);	/*	A temporalis choice-set IM-je	*/
+/*IMTemp=zeros(s*ns,s);			A temporalis osszesitett IM	*/
+/*IM0Temp=zeros(s*ns,s);		A temporalis choice-set IM-je	*/
 transf={3 3 3};
 
 for i (1,ns,1);
@@ -37,13 +37,14 @@ endfor;
 
 IMT00=IMTot;	/*legelso, ha UGYANAZT a designt hasznaljuk mindig, s nem keverjuk meg, akkor hasznalhato */
 
-nd= 4 ;											@ number of designs @
+IMTot=zeros(s*ns,s);
+nd= 2 ;											@ number of designs @
 dd={};
 ii=1;
 do while ii<=nd;									@ start of loop @
 t0=hsec/100;
 xx=X0;											@ generates a random relabeling of x0 @
-min=fcnN(IMTot);
+{min,IMTemp}=fcn2(IMTot,xx,v);
 format /rd 6,3;
 min;
 
@@ -68,6 +69,7 @@ do while i<=csn;
 		x[2*i-1:2*i,1:cols(xx)-1]=swv(x[2*i-1:2*i,1:cols(xx)-1],a[q,.]);
 		{fx,IMTemp}=fcn2(IMTot,x,v);
 		if fx<min;
+			IMTP=IMTemp;
 			xx=x;
 			min=fx;
 			format /rd 3,0;"i=" i;
@@ -92,6 +94,7 @@ do while j<=cols(xx);
 		x[2*i-1 2*i,j]=cy(x[2*i-1,j])|cy(x[2*i,j]);
 		{fx,IMTemp}=fcn2(IMTot,x,v);
 		if min>fx;
+			IMTP=IMTemp;
 			min=fx;xx=x;
 			format /rd 6,3;
 			min;
@@ -101,6 +104,7 @@ do while j<=cols(xx);
 		x[2*i-1 2*i,j]=cy(x[2*i-1,j])|cy(x[2*i,j]);
 		{fx,IMTemp}=fcn2(IMTot,x,v);
 		if min>fx;
+			IMTP=IMTemp;
 			min=fx;xx=x;
 			format /rd 6,3;
 			min;
@@ -110,6 +114,7 @@ do while j<=cols(xx);
 		x[2*i-1 2*i,j]=sw(xx[2*i-1 2*i,j],1);
 		{fx,IMTemp}=fcn2(IMTot,x,v);
 		if min>fx;
+			IMTP=IMTemp;
 			min=fx;xx=x;
 			format /rd 6,3;
 			min;
@@ -119,6 +124,7 @@ do while j<=cols(xx);
 		x[2*i-1 2*i,j]=cy(x[2*i-1,j])|cy(x[2*i,j]);
 		{fx,IMTemp}=fcn2(IMTot,x,v);
 		if min>fx;
+			IMTP=IMTemp;
 			min=fx;xx=x;
 			format /rd 6,3;
 			min;
@@ -128,6 +134,7 @@ do while j<=cols(xx);
 		x[2*i-1 2*i,j]=cy(x[2*i-1,j])|cy(x[2*i,j]);
 		{fx,IMTemp}=fcn2(IMTot,x,v);
 		if min>fx;
+			IMTP=IMTemp;
 			min=fx;xx=x;
 			format /rd 6,3;
 			min;
@@ -138,7 +145,7 @@ do while j<=cols(xx);
 	endo;
 	j=j+1;
 endo;
-IMTot=IMTemp;
+IMTot=IMTP;
 dd=dd|xx;
 "secs=" hsec/100-t0;
 ii=ii+1;
@@ -148,14 +155,10 @@ endo;												@ end of loop @
 
 "secs=" hsec/100-t00;
 
-PROC(3) = fcn3(PIM,x,LL,v);
-LOCAL ;
-ENDP;
-
 PROC(2) = fcn2(PIM,actx,v);
-LOCAL j,jj,derr,IMTemp;
+LOCAL j,jj,derr,IMT;
 IM0=zeros(s*ns,s*csn);
-IMTemp=zeros(s*ns,s);
+IMT=zeros(s*ns,s);
 for j (1,ns,1);
 for jj (1,csn,1);
 	b=b0+sgm*v[.,j];
@@ -165,12 +168,12 @@ endfor;
 
 for j (1,ns,1);
 for jj (1,csn,1);
-	IMTemp[6*j-5:6*j,.]=IMTemp[6*j-5:6*j,.]+IM0[6*j-5:6*j,6*jj-5:6*jj];
+	IMT[6*j-5:6*j,.]=IMT[6*j-5:6*j,.]+IM0[6*j-5:6*j,6*jj-5:6*jj];
 endfor;
 endfor;
-IMTemp=PIM+IMTemp;
-derr=fcnN(IMtemp);
-RETP(derr,IMTemp);
+IMT=PIM+IMT;
+derr=fcnN(IMT);
+RETP(derr,IMT);
 ENDP;
 
 PROC(1)	= fcnN(imt);

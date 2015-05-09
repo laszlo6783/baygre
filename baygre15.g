@@ -14,7 +14,7 @@ ns=64;
 load v[]=rndnorm.txt;
 v=reshape(v,ns,s)';
 
-nd= 2 ;											@ number of designs @
+nd= 3 ;											@ number of designs @
 dd={};
 ii=1;
 do while ii<=nd;									@ start of loop @
